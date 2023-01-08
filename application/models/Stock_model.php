@@ -13,6 +13,7 @@ class Stock_model extends CI_Model
         $this->db->select($columns)->from('stock');
         $this->db->join('items','items.item_id=stock.stock_item','left');
         $this->db->join('batch','batch.batch_id=stock.stock_batch','left');
+        $this->db->join('category','category.cat_id=stock.stock_category','left');
         if(!empty($where_data)){
             $this->db->where($where_data);
         }

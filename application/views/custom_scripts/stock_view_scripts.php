@@ -53,7 +53,7 @@
             "pageLength": 5,
             "columnDefs": [
                     {
-                        "targets": [ 2,4,6 ],
+                        "targets": [ 2,4,6,10 ],
                         "className": "hide_column"
                     }
                 ],

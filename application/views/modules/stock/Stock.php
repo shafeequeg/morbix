@@ -99,6 +99,28 @@
                                     <button class="close" data-close="alert"></button> You have some form errors. Please check below. </div>
                                 <div class="alert alert-success display-hide">
                                     <button class="close" data-close="alert"></button> Your form Will Submit successfully! </div>
+                               
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="form_control_1">Select Category
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                                        
+                                            <select required  class="form-control select2" id="category1"  name="category">
+                                                <option selected disabled>Select Category</option>
+                                                <?php
+                                                foreach($category as $c): 
+                                                ?>
+                                                   <option value='<?php echo $c->cat_id ?>'><?php echo $c->cat_name ?></option>
+                                                   <?php endforeach ?>
+                                               
+                                            </select>
+
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="form_control_1">Select Item
                                         <span class="required">*</span>
@@ -143,7 +165,7 @@
                                 
                                 
                                 <div class="form-group form-md-line-input">
-                                    <label class="col-md-3 control-label" for="form_control_1">Qty
+                                    <label class="col-md-3 control-label" for="form_control_1">Box Qty
                                         <span class="required">*</span>
                                     </label>
                                     <div class="col-md-9">
@@ -151,13 +173,42 @@
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-cube "></i>
                                                         </span>
-                                            <input type="text" class="form-control" placeholder="" name="qty">
+                                            <input type="text" class="form-control" id="bqty" placeholder="" name="qty">
                                             <div class="form-control-focus"> </div>
                                             <span class="help-block">Enter Qty</span>
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="form-group form-md-line-input">
+                                    <label class="col-md-3 control-label"  for="form_control_1">Qty pcs per box
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-cube "></i>
+                                                        </span>
+                                            <input type="text" class="form-control" id="pbox" placeholder="" name="pcsperbox">
+                                            <div class="form-control-focus"> </div>
+                                            <span class="help-block">Enter Qty</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input">
+                                    <label class="col-md-3 control-label"  for="form_control_1">Total Qty in pcs
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-cube "></i>
+                                                        </span>
+                                            <input readonly type="text" class="form-control" id="tp" placeholder="" name="total_pcs">
+                                            <div class="form-control-focus"> </div>
+                                            <span class="help-block">Enter Qty</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group form-md-line-input">
                                     <label class="control-label col-md-3">Image</label>
                                     <div class="col-md-9">
@@ -216,6 +267,27 @@
                                     <button class="close" data-close="alert"></button> You have some form errors. Please check below. </div>
                                 <div class="alert alert-success display-hide">
                                     <button class="close" data-close="alert"></button> Your form Will Submit successfully! </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="form_control_1">Select Category
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                                        
+                                            <select required  class="form-control select2" id="category11"  name="category">
+                                                <option selected disabled>Select Category</option>
+                                                <?php
+                                                foreach($category as $c): 
+                                                ?>
+                                                   <option value='<?php echo $c->cat_id ?>'><?php echo $c->cat_name ?></option>
+                                                   <?php endforeach ?>
+                                               
+                                            </select>
+
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="form_control_1">Select Item
                                         <span class="required">*</span>
@@ -526,7 +598,15 @@
     $("#stock_menu").addClass('selected');
     // $("#hr_menu4").addClass('open');
 
-
+    $("#pbox").keyup(function(){
+        
+        var qty = $("#bqty").val();
+        var pcs = $("#pbox").val();
+        var res = (qty*pcs);
+        
+         $("#tp").val(res);
+    
+    });
 
 
     $('body').on('click', '#deletebtn', function() {
@@ -538,6 +618,8 @@
         var no = $(this).closest('tr').children('td');
 
         $('#stock_id').val(no.eq(0).text());
+        $('#category11').val(no.eq(2).text());
+        $('#category11').trigger("change");
         $('#batch1').val(no.eq(2).text());
         $('#batch1').trigger("change");
         $('#item1').val(no.eq(4).text());

@@ -38,12 +38,14 @@ class Stock extends CI_Controller {
         $this->page_data['result']= $this->Stock->select_stock('')->result();
         $this->page_data['batch']= $this->Data->select_batch('',$data)->result();
         $this->page_data['items']= $this->Data->select_items('',$data)->result();
+        $this->page_data['category']= $this->Data->select_category('',$data)->result();
         $this->page_data['customers']= $this->User->select_customer('')->result();
         $this->page_data['page_name'] = 'Stock';
         $this->load->view('Index',$this->page_data);
     }
     public function create()
     {
+        $d['stock_category']=$this->security->xss_clean($this->input->post('category'));
         $d['stock_batch']=$this->security->xss_clean($this->input->post('batch'));
         $d['stock_item']=$this->security->xss_clean($this->input->post('item'));
         $insert_qty=$this->security->xss_clean($this->input->post('qty'));
@@ -56,9 +58,12 @@ class Stock extends CI_Controller {
             $res2 = $this->Stock->update_stock($data2);
             
             if($res2==1){
+                $h['hcategory']=$this->security->xss_clean($this->input->post('category'));
                 $h['hbatch']=$this->security->xss_clean($this->input->post('batch'));
                 $h['hitem']=$this->security->xss_clean($this->input->post('item'));
                 $h['hqty']=$this->security->xss_clean($this->input->post('qty'));
+                $h['pcs_per_box']=$this->security->xss_clean($this->input->post('pcsperbox'));
+                $h['total_pcs']=$this->security->xss_clean($this->input->post('total_pcs'));
                 $h['created_date_time']=date('Y-m-d H:i:s');
                 $h['created_by']=$this->session->userdata('login_id');
                 $h=$this->Stock->insert_stock_history($h);
@@ -76,9 +81,12 @@ class Stock extends CI_Controller {
            $this->session->set_flashdata($data1);
            redirect(base_url() . 'godown/stock', 'refresh');
         }else{
+            $data['stock_category']=$this->security->xss_clean($this->input->post('category'));
             $data['stock_batch']=$this->security->xss_clean($this->input->post('batch'));
             $data['stock_item']=$this->security->xss_clean($this->input->post('item'));
             $data['stock_qty']=$this->security->xss_clean($this->input->post('qty'));
+            $data['pcs_per_box']=$this->security->xss_clean($this->input->post('pcsperbox'));
+            $data['total_pcs']=$this->security->xss_clean($this->input->post('total_pcs'));
             $data['stock_status']=1;
             $data['stock_created_date']=date('Y-m-d H:i:s');
             $data['stock_created_by']=$this->session->userdata('login_id');
@@ -105,9 +113,12 @@ class Stock extends CI_Controller {
                 $filename = "noimage.jpg";
             }
             $data['photo']= base_url().$target_path1.$filename;
+            $h['hcategory']=$this->security->xss_clean($this->input->post('category'));
             $h['hbatch']=$this->security->xss_clean($this->input->post('batch'));
             $h['hitem']=$this->security->xss_clean($this->input->post('item'));
             $h['hqty']=$this->security->xss_clean($this->input->post('qty'));
+            $h['pcs_per_box']=$this->security->xss_clean($this->input->post('pcsperbox'));
+            $h['total_pcs']=$this->security->xss_clean($this->input->post('total_pcs'));
             $h['created_date_time']=date('Y-m-d H:i:s');
             $h['created_by']=$this->session->userdata('login_id');
             $target_path1 = "uploads/products/";
@@ -155,9 +166,12 @@ class Stock extends CI_Controller {
     public function update()
     {
         $data['stock_id']=$this->security->xss_clean($this->input->post('stock_id'));
+        $data['stock_category']=$this->security->xss_clean($this->input->post('category'));
         $data['stock_batch']=$this->security->xss_clean($this->input->post('batch'));
         $data['stock_item']=$this->security->xss_clean($this->input->post('item'));
         $data['stock_qty']=$this->security->xss_clean($this->input->post('qty'));
+        $data['pcs_per_box']=$this->security->xss_clean($this->input->post('pcsperbox'));
+        $data['total_pcs']=$this->security->xss_clean($this->input->post('total_pcs'));
         $target_path1 = "uploads/products/";
         if($_FILES['uploaded_file']["size"]>0) {
             $target_path = "uploads/products/";
@@ -213,9 +227,12 @@ class Stock extends CI_Controller {
                 $data1['return_status']=1;
                 $result=$this->Stock->update_stock($data1);
                 $data2['sid']=$this->security->xss_clean($this->input->post('stock_id'));
+                $data2['category']=$this->security->xss_clean($this->input->post('category1'));
                 $data2['batch']=$this->security->xss_clean($this->input->post('batch1'));
                 $data2['item']=$this->security->xss_clean($this->input->post('item1'));
                 $data2['qty']=$this->security->xss_clean($this->input->post('qty'));
+                $data2['pcs_per_box']=$this->security->xss_clean($this->input->post('pcsperbox'));
+                $data2['total_pcs']=$this->security->xss_clean($this->input->post('total_pcs'));
                 $data2['status']=$this->security->xss_clean($this->input->post('return'));
                 $data2['remarks']=$this->security->xss_clean($this->input->post('remarks'));
                 $data2['customer']=$this->security->xss_clean($this->input->post('customer'));
@@ -252,9 +269,12 @@ class Stock extends CI_Controller {
             $result=$this->Stock->update_stock($d1);
             //insert history
             $d2['sid']=$this->security->xss_clean($this->input->post('stock_id'));
+            $d2['category']=$this->security->xss_clean($this->input->post('category1'));
             $d2['batch']=$this->security->xss_clean($this->input->post('batch1'));
             $d2['item']=$this->security->xss_clean($this->input->post('item1'));
             $d2['qty']=$this->security->xss_clean($this->input->post('qty'));
+            $d2['pcs_per_box']=$this->security->xss_clean($this->input->post('pcsperbox'));
+            $d2['total_pcs']=$this->security->xss_clean($this->input->post('total_pcs'));
             $d2['status']=$this->security->xss_clean($this->input->post('return'));
             $d2['remarks']=$this->security->xss_clean($this->input->post('remarks'));
             $d2['customer']=$this->security->xss_clean($this->input->post('customer'));
@@ -340,7 +360,12 @@ class Stock extends CI_Controller {
             $json_data['recordsFiltered']=$result->num_rows();
             $array=array();
             foreach($result_array as $row):
-    
+                $c=$row->stock_category;
+                if($c == 0){
+                    $category = 'no category selected';
+                }else{
+                    $category = $row->cat_name;
+                }
                 if($row->stock_qty !='' && $row->stock_qty !=0)
                 {$status="<span class='label label-success ' style='margin-bottom: 5px;margin-right: 5px' >Instock</span>";}
                 else
@@ -361,11 +386,15 @@ class Stock extends CI_Controller {
                                 <i class="fa fa-trash"></i>
                             </a>';
                 $array[$j][]=$row->stock_id;
+                $array[$j][]=$category;
+                $array[$j][]=$row->stock_category;
                 $array[$j][]=$row->batch_name;
                 $array[$j][]=$row->stock_batch;
                 $array[$j][]=$row->item_name;
                 $array[$j][]=$row->stock_item;
                 $array[$j][]=$row->stock_qty;
+                $array[$j][]=$row->pcs_per_box;
+                $array[$j][]=$row->total_pcs;
                 $array[$j][]=$row->photo;
                 $array[$j][]=$img;
                 $array[$j][]=$status.$damageitem;
