@@ -58,11 +58,15 @@
                             <thead>
                             <tr class="">
                                 <th>ID</th>
+                                <th>Category</th>
+                                <th style="display: none;">category</th>
                                 <th>Batch</th>
                                 <th style="display: none;">batch</th>
                                 <th>Item</th>
                                 <th style="display: none;">item</th>
-                                <th>Qty</th>
+                                <th>Box QTY</th>
+                                <th>pcs of one box</th>
+                                <th>Total pcs</th>
                                 <th style="display: none;">Photo</th>
                                 <th>Photo</th>
                                 <th>Status</th>
