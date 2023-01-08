@@ -35,13 +35,72 @@ class Stock extends CI_Controller {
     {
         $data1['batch.delete_status']=0;
         $data2['items.delete_status']=0;
-        $data2['batch.delete_status']=0;
+        
         $this->page_data['result']= $this->Stock->select_stock('')->result();
         $this->page_data['batch']= $this->Data->select_batch('',$data1)->result();
         $this->page_data['items']= $this->Data->select_items('',$data2)->result();
         $this->page_data['customers']= $this->User->select_customer('')->result();
         $this->page_data['page_name'] = 'Stock';
         $this->load->view('Index',$this->page_data);
+    }
+    public function select_stock()
+    {
+       
+
+            $user_type=$this->session->userdata('user_type');
+            $json_data=array();
+            $j=0;
+    
+            $data=array();
+            // $data['q.quot_type']='job_brief';
+            // if($_POST['status']!='' && $_POST['status']!='all'){
+            //     $data['q.approval_status']=$_POST['status'];
+            // }
+            $result	=	$this->Stock->select_stock();
+            $result_array=$result->result();
+    
+            $json_data['draw']=5;
+            $json_data['recordsTotal']=$result->num_rows();
+            $json_data['recordsFiltered']=$result->num_rows();
+            $array=array();
+            foreach($result_array as $row):
+    
+                if($row->stock_qty !='' && $row->stock_qty !=0)
+                {$status="<span class='label label-success ' style='margin-bottom: 5px;margin-right: 5px' >Instock</span>";}
+                else
+                {$status="<span class='label label-danger ' style='margin-bottom: 5px;margin-right: 5px' >Outofstock</span>";}
+
+                if($row->damage!='0')
+                {$damageitem="<span class='label label-primary ' style='margin-bottom: 5px;margin-right: 5px' > $row->damage Qty Damage </span>";}
+                
+                else{
+                    $damageitem="";
+                }
+
+               $img='<img style="width:50px;height: 50px;" src="'. $row->photo.'">';
+                $btn_edit='<a style="margin-left: 5px;margin-right: 5px" id="edit_btn" href="#edit_modal" data-toggle="modal" class="btn btn-warning m-btn m-btn--icon  m-btn--icon-only  m-btn--pill m-btn--air">
+                                <i class="fa fa-edit"></i>
+                            </a>';
+                $btn_delete='<a style="margin-left: 5px;margin-right: 5px" id="gallery_delete_btn" href="#gallery_delete_modal" data-toggle="modal" class="btn btn-danger m-btn m-btn--icon  m-btn--icon-only  m-btn--pill m-btn--air">
+                                <i class="fa fa-trash"></i>
+                            </a>';
+                $array[$j][]=$row->stock_id;
+                $array[$j][]=$row->batch_name;
+                $array[$j][]=$row->stock_batch;
+                $array[$j][]=$row->item_name;
+                $array[$j][]=$row->stock_item;
+                $array[$j][]=$row->stock_qty;
+                $array[$j][]=$row->photo;
+                $array[$j][]=$img;
+                $array[$j][]=$status.$damageitem;
+                $array[$j][]=$btn_edit.$btn_delete;
+    
+                $j++;
+            endforeach;
+    
+            $json_data['data']=$array;
+            echo json_encode($json_data);  // send data as json format
+        
     }
     public function create()
     {

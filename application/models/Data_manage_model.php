@@ -73,6 +73,38 @@ class Data_manage_model extends CI_Model
     }
 
 
+    /******************************************************Category***********************************************************************/
+    public function select_category($columns='*',$where_data='',$order_by_c='',$order_by='',$limit='')
+    {
+        $this->db->select($columns)->from('category');
+        // $this->db->join('batch', 'batch.batch_id = items.batch', 'left');
+        if(!empty($where_data)){
+            $this->db->where($where_data);
+        }
+        if(!empty($order_by_c)&&!empty($order_by)){
+            $this->db->order_by($order_by_c,$order_by);
+        }
+        if(!empty($limit)){
+            $this->db->limit($limit);
+        }
+        $query = $this->db->get();
+        return $query;
+    }
+    public function insert_category($data)
+    {
+        $query=$this->db->insert('category', $data);
+        $result['status']= $query;
+        return $result;
+    }
+    public function update_category($data)
+    {
+        $this->db->where('cat_id',$data['cat_id']);
+        $query=$this->db->update('category',$data);
+        return $query;
+
+    }
+
+
     /****************************************************** PURCHASE ITEMS ***************************************************************/
 
     public function select_purchase_item()

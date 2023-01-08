@@ -216,7 +216,11 @@
                                 <span class="title">Manage Items</span>
                             </a>
                         </li>
-                       
+                        <li class="nav-item  " id="data_menu2">
+                            <a href="<?php echo base_url()?>godown/category" class="nav-link ">
+                                <span class="title">Manage Category</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item  " id="account_menu">
