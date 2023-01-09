@@ -96,11 +96,9 @@
                                     <thead>
                                         <tr>
                                             <th class="invoice-title uppercase text-center">No</th>
-                                            <th class="invoice-title uppercase text-center">Category</th>
                                             <th class="invoice-title uppercase text-center">Batch</th>
                                             <th class="invoice-title uppercase text-center">Item</th>
                                             <th class="invoice-title uppercase text-center">Qty</th>
-                                            <th class="invoice-title uppercase text-center">Pcs</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -160,27 +158,7 @@
                                 <div class="alert alert-success display-hide">
                                     <button class="close" data-close="alert"></button> Your form Will Submit successfully! </div>
 
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label" for="form_control_1">Batch
-                                        <span class="required">*</span>
-                                    </label>
-                                    <div class="col-md-9">
-                                        <div class="input-group">
-                                                        
-                                            <select required id="input-category" class="form-control select2"  name="category">
-                                                <option selected disabled>Select Category</option>
-                                                <?php
-                                            
-                                                foreach($category as $rec) {
-                                                    echo "<option value='$rec->stock_category'>$rec->cat_name</option>";
-                                                }
-                                                ?>
-                                            </select>
 
-
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="form-group">
                                     <label class="col-md-3 control-label" for="form_control_1">Batch
                                         <span class="required">*</span>
@@ -190,7 +168,12 @@
                                                         
                                             <select required id="input-batch" class="form-control select2"  name="batch">
                                                 <option selected disabled>SelectBatch</option>
-                                               
+                                                <?php
+                                            
+                                                foreach($batch as $rec) {
+                                                    echo "<option value='$rec->stock_batch'>$rec->batch_name</option>";
+                                                }
+                                                ?>
                                             </select>
 
 
@@ -215,7 +198,7 @@
                                 </div>
                                
                                 <div class="form-group ">
-                                    <label class="col-md-3 control-label" for="form_control_1">Box Qty
+                                    <label class="col-md-3 control-label" for="form_control_1">Qty
                                         <span class="required">*</span>
                                     </label>
                                     <div class="col-md-9">
@@ -230,22 +213,7 @@
                                 </div>
 
                                 <div class="form-group ">
-                                    <label class="col-md-3 control-label" for="form_control_1">Box pcs Qty
-                                        <span class="required">*</span>
-                                    </label>
-                                    <div class="col-md-9">
-                                        <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-file-text "></i>
-                                                        </span>
-                                            <input required id="input-pcs-qty" type="text" class="form-control" placeholder="" name="qty_pcs">
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-
-                                <div class="form-group ">
-                                    <label class="col-md-3 control-label" for="form_control_1">Left Qty Box
+                                    <label class="col-md-3 control-label" for="form_control_1">Left Qty
                                         <span class="required">*</span>
                                     </label>
                                     <div class="col-md-9">
@@ -259,21 +227,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group ">
-                                    <label class="col-md-3 control-label" for="form_control_1">Left Qty Box pcs
-                                        <span class="required">*</span>
-                                    </label>
-                                    <div class="col-md-9">
-                                        <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-file-text "></i>
-                                                        </span>
-                                            <input readonly id="left_qty_pcs" type="text" class="form-control" placeholder="" name="">
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                                
                                 <br/><br/>
 
                             </div>
@@ -434,20 +387,15 @@
     })
 
     $('#save-order-item').click(function() {
-        const input_category = $('#input-category');
         const input_batch = $('#input-batch');
         const input_item = $('#input-item');
         const input_qty = $('#input-qty');
-        const input_pcs = $('#input-pcs-qty');
         orders.push({
-            'categoryId': input_category.val(),
-            'category_name': $("#input-category option:selected").text(),
             'batchId': input_batch.val(),
             'batch_name': $("#input-batch option:selected").text(),
             'itemId' : input_item.val(),
             'item_name' : $("#input-item option:selected").text(),
-            'qty' : input_qty.val(),
-            'pcs' : input_pcs.val()
+            'qty' : input_qty.val()
         });
         
         populate_table();
@@ -462,11 +410,9 @@
             $.each( orders, function( key, order ) {
                 _child = '<tr>';
                 _child += '<td class="text-center sbold">' + (key+1) + '</td>';
-                _child += '<td class="text-center sbold">' + order.category_name + '</td>';
                 _child += '<td class="text-center sbold">' + order.batch_name + '</td>';
                 _child += '<td class="text-center sbold">' + order.item_name + '</td>';
                 _child += '<td class="text-center sbold">' + order.qty + '</td>';
-                _child += '<td class="text-center sbold">' + order.pcs + '</td>';
                 _child += '<td><button class="btn btn-remove-item" data-id="'+key+'"><i class="fa fa-trash"></i></button></td>';
                 _child += '</tr>';
                 _html += _child;
@@ -505,24 +451,7 @@
 
     })
  
-    $("#input-category").change(function(){
-    var category = $("#input-category").val();
-    $("#input-batch").html('');
-    $("#input-batch").append("<option></option>");
- 
-    $.post("<?php echo base_url().$controller_directory.'/orders/select_batch_frm_stock'?>",{
-        category: category},function(data){
-            //  console.log(data);
-        var obj = $.parseJSON(data);
-        var i = 0;
-        while (i < obj.id.length) {
-            
-            $("#input-batch").append("<option value="+obj.id[i]+">"+obj.name[i]+"</option>");
-            i++;
-        }
-        })
 
-    })
 
     $("#input-batch").change(function(){
     var batch = $("#input-batch").val();
@@ -553,29 +482,12 @@
             var obj = $.parseJSON(data);
              
             $("#left_qty").val(obj.qty);
-            $("#left_qty_pcs").val(obj.pcs);
         }
         )
         
     })
 
-    $("#input-qty").keyup(function(){
-        
-        var qty = $("#input-qty").val();
-        var left = $("#left_qty").val();
-        var res = (left-qty);
-        
-        
-    
-    });
-    $("#input-pcs-qty").keyup(function(){
-        
-        var qty1 = $("#input-pcs-qty").val();
-        var left1 = $("#left_qty_pcs").val();
-        var res1 = (left1-qty1);
-        
-    
-    });
+
    
     
 

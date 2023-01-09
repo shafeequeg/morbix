@@ -204,7 +204,24 @@ class Order_model extends CI_Model
     // SELECT COUNT(CustomerID), Country
     // FROM Customers
     // GROUP BY Country;
-    
+    public function select_category_frm_stock($columns='',$where_data='',$order_by_c='',$order_by='',$limit='')
+    {
+        $this->db->select('*');
+        $this->db->from('stock');
+        $this->db->join('category','category.cat_id=stock.stock_category','left');
+        $this->db->group_by('stock_category');
+        if(!empty($where_data)){
+            $this->db->where($where_data);
+        }
+        if(!empty($order_by_c)&&!empty($order_by)){
+            $this->db->order_by($order_by_c,$order_by);
+        }
+        if(!empty($limit)){
+            $this->db->limit($limit);
+        }
+        $query = $this->db->get();
+        return $query;
+    }
 
     public function select_batch_frm_stock($columns='',$where_data='',$order_by_c='',$order_by='',$limit='')
     {

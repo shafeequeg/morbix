@@ -233,23 +233,15 @@ class Orders extends CI_Controller {
                 $data['batch'] = $order['batchId'];
                 $data['item']= $order['itemId'];
                 $data['qty']= $order['qty'];
-                $data['pcs']= $order['pcs'];
                 $data['oid'] = $orderid;
 
                 $data11['stock_item']= $order['itemId'];
                 $res=$this->Stock->select_stock('',$data11);
                 if ($res->num_rows()!='') {
                     $previous_qty = $res->row()->stock_qty;
-                    $previous_pcs = $res->row()->total_pcs;
-                    $box_pcs = $res->row()->pcs_per_box;
-
-                    $r =  ($data['qty'])*($box_pcs);
-                    $s = $r+$data['pcs'];
                     $input_qty=$order['qty'];
-                    $input_pcs=$order['pcs'];
                     $d1['stock_item'] = $order['itemId'];
                     $d1['stock_qty'] = $previous_qty-$input_qty;
-                    $d1['total_pcs'] = $previous_pcs-$s;
                     $result6=$this->Stock->update_stock_qty($d1);
                 }
                 $result = $this->Order->insert_items($data);
