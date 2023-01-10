@@ -231,7 +231,7 @@ class Orders extends CI_Controller {
                 $new_no = 0001; // Starting No When No Data is Present
             }
         $data1['order_no'] =$order_prefix.str_pad($new_no, 4, '0', STR_PAD_LEFT);
-        $data1['order_status']=1;
+        $data1['order_status']=3;
         $data1['order_created_date']= $_POST['date']; 
         $data1['order_created_by']= $this->session->userdata('login_id'); 
         $data1['order_customer']= $_POST['customer']; 
