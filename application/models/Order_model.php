@@ -121,8 +121,9 @@ class Order_model extends CI_Model
     public function select_billing($columns='*',$where_data='',$order_by_c='',$order_by='',$limit='')
     {
         $this->db->select($columns)->from('orders');
-        // $this->db->join('customers','customers.cid=orders.order_customer','left');
+       
         $this->db->join('order_items','order_items.oid=orders.order_id','left');
+        $this->db->join('category','category.cat_id=order_items.category','left');
         $this->db->join('batch','batch.batch_id=order_items .batch','left');
         $this->db->join('items','items.item_id=order_items .item','left');
         

@@ -129,6 +129,18 @@ class Orders extends CI_Controller {
         
     }
 
+    public function create_invoice($id='')
+    {
+        if(!empty($id)){
+            $data['order_id']=$id;
+            $this->page_data['oid']=$id;
+            $this->page_data['result']= $this->Order->select_billing('',$data)->result();
+            $this->page_data['result1'] =$this->Order->select_order_billing_details('',$data)->row();
+            $this->page_data['page_name'] = 'Invoice';
+            $this->load->view('Index',$this->page_data);
+        }
+    }
+
     public function shipped()
     {
         $data['order_id'] = $this->security->xss_clean($this->input->post('deleteid'));
@@ -230,6 +242,7 @@ class Orders extends CI_Controller {
         $orders = $this->security->xss_clean($this->input->post('orders'));
         if(count($orders)) {
             foreach($orders as $order) {
+                $data['category'] = $order['categoryId'];
                 $data['batch'] = $order['batchId'];
                 $data['item']= $order['itemId'];
                 $data['qty']= $order['qty'];
@@ -254,10 +267,10 @@ class Orders extends CI_Controller {
                 }
                 $result = $this->Order->insert_items($data);
 
-               
+                echo json_encode($orderid);
                 
             }
-            echo 'ok';
+            
         }
 
       
@@ -308,7 +321,7 @@ class Orders extends CI_Controller {
             }
             echo 'ok';
         }
-
+        redirect(base_url() . 'godown/orders', 'refresh');
       
     }
 

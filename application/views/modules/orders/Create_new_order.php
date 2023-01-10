@@ -493,10 +493,11 @@
             const date = $('#input-date1').val();
             const driver = $('#input-driver').val();
             const _xhr = $.post('<?= base_url() . $controller_directory; ?>/orders/create', {orders: orders, customer: customer, driver: driver, date:date});
-            _xhr.done(function() {
-                location.reload();
-               
-                toastr["success"]("Success . New Order Created", "Success")
+            _xhr.done(function(data) {
+                console.log(data);
+                toastr["success"]("Success . New Order Created", "Success");
+                window.location.href = '<?= base_url() . $controller_directory; ?>/orders/create_invoice/'+data;
+                
             })
         }
         else{
